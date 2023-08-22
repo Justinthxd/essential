@@ -1,4 +1,5 @@
 import 'package:essential/core/router/router.dart';
+import 'package:essential/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Essential',
       routerConfig: router,
+      theme: AppTheme.theme(),
     );
   }
 }
