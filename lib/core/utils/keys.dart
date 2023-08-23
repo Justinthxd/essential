@@ -8,7 +8,15 @@ class CurrencyKeys {
   static const String eur = 'EUR';
 }
 
-class RadioKeys {
+class InsightsOptionsKeys {
   static const String expenses = 'expenses';
   static const String incomes = 'incomes';
+}
+
+class InsightsFormKeys {
+  static const String amount = 'amount';
+  static const String description = 'description';
+  static const String currency = 'currency';
+  static const String date = 'date';
+  static const String mode = 'mode';
 }

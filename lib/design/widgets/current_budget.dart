@@ -15,7 +15,7 @@ class CurrentBudget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: blueColor,
+        color: cakeColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

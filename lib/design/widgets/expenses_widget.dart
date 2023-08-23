@@ -13,7 +13,7 @@ class ExpensesWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: cakeColor,
+          color: pinkColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

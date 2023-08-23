@@ -1,5 +1,5 @@
 import 'package:essential/core/utils/constants.dart';
-import 'package:essential/design/widgets/add_sheet.dart';
+import 'package:essential/design/widgets/add_dialog.dart';
 import 'package:essential/design/widgets/current_budget.dart';
 import 'package:essential/design/widgets/expenses_widget.dart';
 import 'package:essential/design/widgets/incomes_widget.dart';
@@ -46,8 +46,7 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            const SizedBox(width: 35),
+            const SizedBox(height: 30),
             Container(
               width: size.width,
               margin: const EdgeInsets.symmetric(horizontal: 30),
@@ -60,12 +59,11 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView(
-                children: [
+                children: const [
                   FolderItem(
-                    size: size,
                     icon: Icons.percent_rounded,
                     name: 'Sales',
                     description: 'Sinces last week',
@@ -73,7 +71,6 @@ class _HomeState extends State<Home> {
                     colorContainer: greenColor,
                   ),
                   FolderItem(
-                    size: size,
                     icon: Icons.account_circle_outlined,
                     name: 'Customers',
                     description: 'Sinces last week',
@@ -81,7 +78,6 @@ class _HomeState extends State<Home> {
                     colorContainer: purpleColor,
                   ),
                   FolderItem(
-                    size: size,
                     icon: Icons.category_rounded,
                     name: 'Products',
                     description: 'Products last week',
@@ -89,7 +85,6 @@ class _HomeState extends State<Home> {
                     colorContainer: cakeColor,
                   ),
                   FolderItem(
-                    size: size,
                     icon: Icons.pie_chart_rounded,
                     name: 'Revenue',
                     description: 'Sinces last week',
@@ -104,8 +99,7 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton.large(
         backgroundColor: const Color.fromARGB(255, 40, 40, 40),
-        // onPressed: () => showAddDialog(context),
-        onPressed: () => showAddBottomSheet(context),
+        onPressed: () => showAddDialog(context),
         child: const Icon(
           Icons.add,
           size: 45,

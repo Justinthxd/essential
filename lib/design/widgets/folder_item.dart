@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class FolderItem extends StatelessWidget {
   const FolderItem({
     super.key,
-    required this.size,
     required this.icon,
     required this.name,
     required this.description,
@@ -11,7 +10,6 @@ class FolderItem extends StatelessWidget {
     required this.colorContainer,
   });
 
-  final Size size;
   final IconData icon;
   final String name;
   final String description;
@@ -20,6 +18,7 @@ class FolderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
       padding: const EdgeInsets.symmetric(vertical: 20),
