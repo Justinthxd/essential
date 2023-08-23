@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ListViewDetails extends StatelessWidget {
-  const ListViewDetails({
+class FolderItem extends StatelessWidget {
+  const FolderItem({
     super.key,
     required this.size,
     required this.icon,

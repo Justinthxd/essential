@@ -1,7 +1,11 @@
 import 'package:essential/core/utils/constants.dart';
+import 'package:essential/design/widgets/add_sheet.dart';
+import 'package:essential/design/widgets/current_budget.dart';
+import 'package:essential/design/widgets/expenses_widget.dart';
+import 'package:essential/design/widgets/incomes_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../widget/list_view_details.dart';
+import '../widgets/folder_item.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -18,56 +22,27 @@ class _HomeState extends State<Home> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
+        elevation: 0,
         title: const Text(
           'Essential',
           style: TextStyle(
             color: Colors.white54,
-            fontSize: 22,
+            fontSize: 25,
           ),
         ),
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.menu,
-            color: Colors.white54,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-          ),
-        ],
       ),
       body: SizedBox(
         height: size.height,
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const CurrentBudget(),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
+              child: const Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      height: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: greenColor,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: Container(
-                      height: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: cakeColor,
-                      ),
-                    ),
-                  ),
+                  ExpensesWidget(),
+                  SizedBox(width: 20),
+                  IncomesWidget(),
                 ],
               ),
             ),
@@ -77,7 +52,7 @@ class _HomeState extends State<Home> {
               width: size.width,
               margin: const EdgeInsets.symmetric(horizontal: 30),
               child: const Text(
-                'Records',
+                'Insights',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.white,
@@ -89,7 +64,7 @@ class _HomeState extends State<Home> {
             Expanded(
               child: ListView(
                 children: [
-                  ListViewDetails(
+                  FolderItem(
                     size: size,
                     icon: Icons.percent_rounded,
                     name: 'Sales',
@@ -97,7 +72,7 @@ class _HomeState extends State<Home> {
                     money: '230k',
                     colorContainer: greenColor,
                   ),
-                  ListViewDetails(
+                  FolderItem(
                     size: size,
                     icon: Icons.account_circle_outlined,
                     name: 'Customers',
@@ -105,7 +80,7 @@ class _HomeState extends State<Home> {
                     money: '8.549k',
                     colorContainer: purpleColor,
                   ),
-                  ListViewDetails(
+                  FolderItem(
                     size: size,
                     icon: Icons.category_rounded,
                     name: 'Products',
@@ -113,7 +88,7 @@ class _HomeState extends State<Home> {
                     money: '1.423k',
                     colorContainer: cakeColor,
                   ),
-                  ListViewDetails(
+                  FolderItem(
                     size: size,
                     icon: Icons.pie_chart_rounded,
                     name: 'Revenue',
@@ -129,7 +104,8 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton.large(
         backgroundColor: const Color.fromARGB(255, 40, 40, 40),
-        onPressed: () {},
+        // onPressed: () => showAddDialog(context),
+        onPressed: () => showAddBottomSheet(context),
         child: const Icon(
           Icons.add,
           size: 45,
