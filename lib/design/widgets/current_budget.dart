@@ -11,10 +11,10 @@ class CurrentBudget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // height: 120,
-      margin: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
         color: cakeColor,
       ),
       child: Column(
