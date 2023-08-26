@@ -38,7 +38,7 @@ class CurrentBudget extends StatelessWidget {
                 ),
               ),
               Text(
-                '1,250',
+                '0',
                 style: TextStyle(
                   fontSize: 40,
                   color: Colors.black.withOpacity(0.8),
@@ -64,7 +64,7 @@ class CurrentBudget extends StatelessWidget {
                 color: Colors.green.withOpacity(0.8),
               ),
               Text(
-                '\$1,125',
+                '\$0',
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.green.withOpacity(0.8),

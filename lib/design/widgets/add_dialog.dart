@@ -1,7 +1,10 @@
 import 'package:essential/core/utils/constants.dart';
 import 'package:essential/core/utils/keys.dart';
+import 'package:essential/design/bloc/incomes_bloc/incomes_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:go_router/go_router.dart';
 
 showAddDialog(BuildContext context) {
   return showDialog(
@@ -24,6 +27,7 @@ class AddDialog extends StatefulWidget {
 class _AddDialogState extends State<AddDialog> {
   final _formKey = GlobalKey<FormBuilderState>();
   bool isActive = true;
+  final TextEditingController mountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +80,7 @@ class _AddDialogState extends State<AddDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            context.pop();
           },
           child: const Text(
             'Cancel',
@@ -88,7 +92,14 @@ class _AddDialogState extends State<AddDialog> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            final mount = mountController.text;
+            final state = context.read<IncomesBloc>().state;
+
+            if (state is AddIncomesState) {}
+
+            context.read<IncomesBloc>().add(AddIncomesEvent(mount));
+
+            context.pop();
           },
           child: const Text(
             'Add',
@@ -115,6 +126,7 @@ class _AddDialogState extends State<AddDialog> {
             ),
             child: FormBuilderTextField(
               name: InsightsFormKeys.amount,
+              controller: mountController,
               keyboardType: TextInputType.number,
               style: const TextStyle(
                 color: Colors.white,
