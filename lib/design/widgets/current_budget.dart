@@ -1,6 +1,9 @@
 import 'package:essential/core/utils/constants.dart';
+import 'package:essential/core/utils/dictionary.dart';
 import 'package:essential/core/utils/keys.dart';
+import 'package:essential/design/bloc/budget_bloc/budget_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CurrentBudget extends StatelessWidget {
   const CurrentBudget({
@@ -27,34 +30,41 @@ class CurrentBudget extends StatelessWidget {
               color: Colors.black45,
             ),
           ),
-          Row(
-            children: [
-              Text(
-                '\$',
-                style: TextStyle(
-                  fontSize: 35,
-                  color: Colors.black.withOpacity(0.8),
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              Text(
-                '0',
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.black.withOpacity(0.8),
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                CurrencyKeys.dop,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black.withOpacity(0.7),
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
+          BlocBuilder<BudgetBloc, BudgetState>(
+            builder: (context, state) {
+              if (state is BudgetDataState) {
+                return Row(
+                  children: [
+                    Text(
+                      '\$',
+                      style: TextStyle(
+                        fontSize: 35,
+                        color: Colors.black.withOpacity(0.8),
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      calculateAmount(state.income, state.expense),
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: Colors.black.withOpacity(0.8),
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      CurrencyKeys.dop,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black.withOpacity(0.7),
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return Container();
+            },
           ),
           // Row(
           //   children: [

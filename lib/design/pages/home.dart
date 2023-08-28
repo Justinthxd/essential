@@ -1,9 +1,11 @@
 import 'package:essential/core/utils/constants.dart';
 import 'package:essential/core/utils/keys.dart';
+import 'package:essential/design/bloc/budget_bloc/budget_bloc.dart';
 import 'package:essential/design/widgets/current_budget.dart';
 import 'package:essential/design/widgets/expenses_widget.dart';
 import 'package:essential/design/widgets/incomes_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class Home extends StatefulWidget {
@@ -146,7 +148,23 @@ class _HomeState extends State<Home> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.ease,
           );
-          _formKey.currentState?.saveAndValidate();
+
+          if (_formKey.currentState!.saveAndValidate()) {
+            final data = _formKey.currentState!.value;
+            if (currentValue == InsightsOptionsKeys.incomes) {
+              context
+                  .read<BudgetBloc>()
+                  .add(AddIncome(data[InsightsFormKeys.amount]));
+            } else if (currentValue == InsightsOptionsKeys.expenses) {
+              context
+                  .read<BudgetBloc>()
+                  .add(AddExpense(data[InsightsFormKeys.amount]));
+            } else if (currentValue == InsightsOptionsKeys.savings) {
+              context
+                  .read<BudgetBloc>()
+                  .add(AddSavings(data[InsightsFormKeys.amount]));
+            }
+          }
         },
         child: const Icon(
           Icons.add,
