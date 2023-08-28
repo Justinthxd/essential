@@ -30,7 +30,7 @@ class ExpensesWidget extends StatelessWidget {
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                '\$250',
+                '\$0',
                 style: TextStyle(
                   fontSize: 29,
                   color: Colors.black.withOpacity(0.7),

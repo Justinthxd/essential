@@ -1,12 +1,10 @@
 import 'package:essential/core/utils/constants.dart';
-import 'package:essential/design/widgets/add_dialog.dart';
+import 'package:essential/core/utils/keys.dart';
 import 'package:essential/design/widgets/current_budget.dart';
 import 'package:essential/design/widgets/expenses_widget.dart';
 import 'package:essential/design/widgets/incomes_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import '../widgets/folder_item.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,6 +14,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  PageController pageController = PageController(initialPage: 0);
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  String currentValue = InsightsOptionsKeys.incomes;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -34,7 +37,7 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
             onPressed: () {
-              context.pushNamed('/charts');
+              // context.pushNamed('/charts');
             },
             icon: const Icon(
               Icons.bar_chart_rounded,
@@ -52,66 +55,83 @@ class _HomeState extends State<Home> {
       ),
       body: SizedBox(
         height: size.height,
-        child: Column(
+        child: PageView(
+          controller: pageController,
           children: [
-            const SizedBox(height: 20),
-            const CurrentBudget(),
-            const SizedBox(height: 15),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Row(
-                children: [
-                  ExpensesWidget(),
-                  SizedBox(width: 15),
-                  IncomesWidget(),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-            Container(
-              width: size.width,
-              margin: const EdgeInsets.symmetric(horizontal: 30),
-              child: const Text(
-                'Insights',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+            Column(
+              children: [
+                const SizedBox(height: 20),
+                const CurrentBudget(),
+                const SizedBox(height: 15),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Row(
+                    children: [
+                      ExpensesWidget(),
+                      SizedBox(width: 15),
+                      IncomesWidget(),
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 30),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.symmetric(horizontal: 30),
+                  child: const Text(
+                    'Insights',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      'No insights',
+                      style: TextStyle(
+                        color: Colors.white60,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListView(
-                children: const [
-                  FolderItem(
-                    icon: Icons.percent_rounded,
-                    name: 'Sales',
-                    description: 'Sinces last week',
-                    money: '230k',
-                    colorContainer: greenColor,
+            Container(
+              padding: const EdgeInsets.all(17),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 60,
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.03),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        _savingsOption(),
+                        const SizedBox(width: 5),
+                        _option(
+                          'Expenses',
+                          const Color.fromARGB(255, 233, 176, 172),
+                          InsightsOptionsKeys.expenses,
+                        ),
+                        const SizedBox(width: 5),
+                        _option(
+                          'Incomes',
+                          const Color.fromARGB(255, 180, 224, 182),
+                          InsightsOptionsKeys.incomes,
+                        ),
+                      ],
+                    ),
                   ),
-                  FolderItem(
-                    icon: Icons.account_circle_outlined,
-                    name: 'Customers',
-                    description: 'Sinces last week',
-                    money: '8.549k',
-                    colorContainer: purpleColor,
-                  ),
-                  FolderItem(
-                    icon: Icons.category_rounded,
-                    name: 'Products',
-                    description: 'Products last week',
-                    money: '1.423k',
-                    colorContainer: cakeColor,
-                  ),
-                  FolderItem(
-                    icon: Icons.pie_chart_rounded,
-                    name: 'Revenue',
-                    description: 'Sinces last week',
-                    money: '\$ 9745',
-                    colorContainer: greenColor,
-                  ),
+                  const SizedBox(height: 15),
+                  _insightsForm(),
                 ],
               ),
             ),
@@ -120,12 +140,155 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton.large(
         backgroundColor: const Color.fromARGB(255, 40, 40, 40),
-        onPressed: () => showAddDialog(context),
+        onPressed: () {
+          pageController.animateToPage(
+            1,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.ease,
+          );
+          _formKey.currentState?.saveAndValidate();
+        },
         child: const Icon(
           Icons.add,
           size: 45,
           color: Colors.white,
         ),
+      ),
+    );
+  }
+
+  _savingsOption() {
+    bool isActive = false;
+    Color color = const Color.fromARGB(255, 233, 226, 172);
+
+    if (currentValue == InsightsOptionsKeys.savings) {
+      isActive = true;
+    }
+
+    return GestureDetector(
+      onTap: () {
+        currentValue = InsightsOptionsKeys.savings;
+        setState(() {});
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: isActive ? color : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(
+          Icons.savings,
+          color: isActive ? Colors.black.withOpacity(0.8) : color,
+        ),
+      ),
+    );
+  }
+
+  _option(String title, Color color, String key) {
+    bool isActive = false;
+
+    if (currentValue == key) {
+      isActive = true;
+    }
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          currentValue = key;
+          setState(() {});
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          decoration: BoxDecoration(
+            color: isActive ? color : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 17,
+                color: isActive ? Colors.black : color,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _insightsForm() {
+    return FormBuilder(
+      key: _formKey,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.03),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: FormBuilderTextField(
+              name: InsightsFormKeys.amount,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+              decoration: const InputDecoration(
+                hintText: 'Amount',
+                hintStyle: TextStyle(
+                  color: Colors.white60,
+                ),
+                errorStyle: TextStyle(
+                  color: Colors.red,
+                ),
+                border: InputBorder.none,
+              ),
+              onTapOutside: (event) {},
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter amount';
+                }
+                return null;
+              },
+            ),
+          ),
+          const SizedBox(height: 15),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.03),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: FormBuilderTextField(
+              name: InsightsFormKeys.description,
+              textCapitalization: TextCapitalization.sentences,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+              maxLines: 5,
+              decoration: const InputDecoration(
+                hintText: 'Description',
+                hintStyle: TextStyle(
+                  color: Colors.white60,
+                ),
+                errorStyle: TextStyle(
+                  color: Colors.red,
+                ),
+                border: InputBorder.none,
+              ),
+              onTapOutside: (event) {},
+            ),
+          ),
+        ],
       ),
     );
   }

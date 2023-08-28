@@ -38,7 +38,7 @@ class CurrentBudget extends StatelessWidget {
                 ),
               ),
               Text(
-                '1,250',
+                '0',
                 style: TextStyle(
                   fontSize: 40,
                   color: Colors.black.withOpacity(0.8),
@@ -56,31 +56,31 @@ class CurrentBudget extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            children: [
-              Icon(
-                Icons.arrow_drop_up_rounded,
-                size: 30,
-                color: Colors.green.withOpacity(0.8),
-              ),
-              Text(
-                '\$1,125',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.green.withOpacity(0.8),
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(width: 5),
-              const Text(
-                'Last month',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black38,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Icon(
+          //       Icons.arrow_drop_up_rounded,
+          //       size: 30,
+          //       color: Colors.green.withOpacity(0.8),
+          //     ),
+          //     Text(
+          //       '\$1,125',
+          //       style: TextStyle(
+          //         fontSize: 20,
+          //         color: Colors.green.withOpacity(0.8),
+          //         fontWeight: FontWeight.w800,
+          //       ),
+          //     ),
+          //     const SizedBox(width: 5),
+          //     const Text(
+          //       'Last month',
+          //       style: TextStyle(
+          //         fontSize: 15,
+          //         color: Colors.black38,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

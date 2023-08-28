@@ -11,6 +11,7 @@ class CurrencyKeys {
 class InsightsOptionsKeys {
   static const String expenses = 'expenses';
   static const String incomes = 'incomes';
+  static const String savings = 'savings';
 }
 
 class InsightsFormKeys {
