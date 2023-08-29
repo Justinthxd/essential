@@ -19,6 +19,14 @@ class _AddState extends State<Add> {
   String currentValue = InsightsOptionsKeys.incomes;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _formKey.currentState!.fields[InsightsFormKeys.amount]!.focus();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
