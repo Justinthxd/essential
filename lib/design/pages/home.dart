@@ -1,8 +1,11 @@
 import 'package:essential/core/utils/constants.dart';
+import 'package:essential/design/bloc/insights_bloc/insights_bloc.dart';
 import 'package:essential/design/widgets/current_budget.dart';
 import 'package:essential/design/widgets/expenses_widget.dart';
+import 'package:essential/design/widgets/folder_item.dart';
 import 'package:essential/design/widgets/incomes_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class Home extends StatelessWidget {
@@ -71,16 +74,38 @@ class Home extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'No insights',
-                  style: TextStyle(
-                    color: Colors.white60,
-                    fontSize: 16,
+            BlocBuilder<InsightsBloc, InsightsState>(
+              builder: (context, state) {
+                if (state is InsightsLoadedState) {
+                  return SizedBox(
+                    height: 300,
+                    child: ListView.builder(
+                      itemCount: state.insights.length,
+                      itemBuilder: (context, index) {
+                        final insight = state.insights[index];
+                        return FolderItem(
+                          icon: insight.icon,
+                          name: insight.description,
+                          description: insight.date,
+                          money: insight.amount,
+                          colorContainer: cakeColor,
+                        );
+                      },
+                    ),
+                  );
+                }
+                return const Expanded(
+                  child: Center(
+                    child: Text(
+                      'No insights',
+                      style: TextStyle(
+                        color: Colors.white60,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),

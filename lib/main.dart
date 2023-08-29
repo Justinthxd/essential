@@ -1,6 +1,7 @@
 import 'package:essential/core/router/router.dart';
 import 'package:essential/core/theme/theme.dart';
 import 'package:essential/design/bloc/budget_bloc/budget_bloc.dart';
+import 'package:essential/design/bloc/insights_bloc/insights_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => BudgetBloc(),
+        ),
+        BlocProvider(
+          create: (context) => InsightsBloc(),
         ),
       ],
       child: MaterialApp.router(

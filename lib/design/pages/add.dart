@@ -1,6 +1,8 @@
 import 'package:essential/core/utils/constants.dart';
 import 'package:essential/core/utils/keys.dart';
+import 'package:essential/data/models/insight_model.dart';
 import 'package:essential/design/bloc/budget_bloc/budget_bloc.dart';
+import 'package:essential/design/bloc/insights_bloc/insights_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -119,6 +121,16 @@ class _AddState extends State<Add> {
                           .read<BudgetBloc>()
                           .add(AddSavings(data[InsightsFormKeys.amount]));
                     }
+                    final newInsight = InsightModel(
+                      amount:
+                          _formKey.currentState!.value[InsightsFormKeys.amount],
+                      date: DateTime.now().toString(),
+                      description: _formKey
+                          .currentState!.value[InsightsFormKeys.description],
+                    );
+                    context
+                        .read<InsightsBloc>()
+                        .add(AddInsightEvent(newInsight));
                     context.pop();
                   }
                 },
