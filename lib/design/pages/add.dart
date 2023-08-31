@@ -20,6 +20,8 @@ class _AddState extends State<Add> {
 
   String currentValue = InsightsOptionsKeys.incomes;
 
+  bool isActive = false;
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +57,7 @@ class _AddState extends State<Add> {
           IconButton(
             onPressed: () {},
             icon: const Icon(
-              Icons.bar_chart_rounded,
+              Icons.savings_rounded,
               color: Colors.white54,
             ),
           ),
@@ -279,6 +281,111 @@ class _AddState extends State<Add> {
                 }
                 return null;
               },
+            ),
+          ),
+          const SizedBox(height: 15),
+          Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ExpansionPanelList(
+              elevation: 0,
+              expansionCallback: (panelIndex, isExpanded) {
+                isActive = !isActive;
+                setState(() {});
+              },
+              expandIconColor: Colors.white38,
+              children: [
+                ExpansionPanel(
+                  isExpanded: isActive,
+                  backgroundColor: Colors.white.withOpacity(0.03),
+                  headerBuilder: (context, isExpanded) {
+                    return !isExpanded
+                        ? ListTile(
+                            onTap: () {
+                              isActive = !isActive;
+                              setState(() {});
+                            },
+                            tileColor: Colors.transparent,
+                            title: const Text(
+                              'Add to folder',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white60,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin: const EdgeInsets.only(left: 10),
+                            padding: const EdgeInsets.only(left: 10),
+                            child: const TextField(
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: 'Search',
+                                hintStyle: TextStyle(
+                                  color: Colors.white54,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          );
+                  },
+                  body: SizedBox(
+                    height: 120,
+                    child: Scrollbar(
+                      thickness: 10,
+                      interactive: true,
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        children: [
+                          ListTile(
+                            tileColor: Colors.transparent,
+                            title: const Text(
+                              'Food',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white70,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          ListTile(
+                            tileColor: Colors.transparent,
+                            title: const Text(
+                              'Customers',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white70,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          const ListTile(
+                            tileColor: Colors.transparent,
+                            title: Text(
+                              'Customers',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white70,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 15),

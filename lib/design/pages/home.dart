@@ -29,9 +29,9 @@ class Home extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(
-              Icons.bar_chart_rounded,
-              color: Colors.white54,
+            icon: Icon(
+              Icons.savings_rounded,
+              color: Colors.yellow.withOpacity(0.7),
             ),
           ),
           IconButton(
