@@ -1,6 +1,7 @@
 import 'package:essential/core/router/router.dart';
 import 'package:essential/core/theme/theme.dart';
 import 'package:essential/design/bloc/budget_bloc/budget_bloc.dart';
+import 'package:essential/design/bloc/folder_bloc/folder_bloc.dart';
 import 'package:essential/design/bloc/insights_bloc/insights_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => InsightsBloc(),
+        ),
+        BlocProvider(
+          create: (context) => FolderBloc(),
         ),
       ],
       child: MaterialApp.router(

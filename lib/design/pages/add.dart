@@ -2,6 +2,7 @@ import 'package:essential/core/utils/constants.dart';
 import 'package:essential/core/utils/keys.dart';
 import 'package:essential/data/models/insight_model.dart';
 import 'package:essential/design/bloc/budget_bloc/budget_bloc.dart';
+import 'package:essential/design/bloc/folder_bloc/folder_bloc.dart';
 import 'package:essential/design/bloc/insights_bloc/insights_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,13 +21,21 @@ class _AddState extends State<Add> {
 
   String currentValue = InsightsOptionsKeys.incomes;
 
+  final TextEditingController folderController = TextEditingController();
+
   bool isActive = false;
+
+  final FocusNode _focus = FocusNode();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _formKey.currentState!.fields[InsightsFormKeys.amount]!.focus();
+
+      final folder = InsightModel(folder: folderController.text);
+
+      context.read<FolderBloc>().add(FolderNameEvent(folder));
     });
   }
 
@@ -70,111 +79,118 @@ class _AddState extends State<Add> {
           ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.all(17),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 60,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.03),
-                borderRadius: BorderRadius.circular(10),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(17),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 60,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.03),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    _savingsOption(),
+                    const SizedBox(width: 5),
+                    _option(
+                      'Expenses',
+                      const Color.fromARGB(255, 233, 176, 172),
+                      InsightsOptionsKeys.expenses,
+                    ),
+                    const SizedBox(width: 5),
+                    _option(
+                      'Incomes',
+                      const Color.fromARGB(255, 180, 224, 182),
+                      InsightsOptionsKeys.incomes,
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  _savingsOption(),
-                  const SizedBox(width: 5),
-                  _option(
-                    'Expenses',
-                    const Color.fromARGB(255, 233, 176, 172),
-                    InsightsOptionsKeys.expenses,
-                  ),
-                  const SizedBox(width: 5),
-                  _option(
-                    'Incomes',
-                    const Color.fromARGB(255, 180, 224, 182),
-                    InsightsOptionsKeys.incomes,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15),
-            _insightsForm(),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.saveAndValidate()) {
-                    final data = _formKey.currentState!.value;
-                    if (currentValue == InsightsOptionsKeys.incomes) {
+              const SizedBox(height: 15),
+              _insightsForm(),
+              const SizedBox(height: 15),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.saveAndValidate()) {
+                      final data = _formKey.currentState!.value;
+                      if (currentValue == InsightsOptionsKeys.incomes) {
+                        context
+                            .read<BudgetBloc>()
+                            .add(AddIncome(data[InsightsFormKeys.amount]));
+                      } else if (currentValue == InsightsOptionsKeys.expenses) {
+                        context
+                            .read<BudgetBloc>()
+                            .add(AddExpense(data[InsightsFormKeys.amount]));
+                      } else if (currentValue == InsightsOptionsKeys.savings) {
+                        context
+                            .read<BudgetBloc>()
+                            .add(AddSavings(data[InsightsFormKeys.amount]));
+                      }
+                      final newInsight = InsightModel(
+                        amount: _formKey
+                            .currentState!.value[InsightsFormKeys.amount],
+                        date: DateTime.now().toString(),
+                        description: _formKey
+                            .currentState!.value[InsightsFormKeys.description],
+                      );
                       context
-                          .read<BudgetBloc>()
-                          .add(AddIncome(data[InsightsFormKeys.amount]));
-                    } else if (currentValue == InsightsOptionsKeys.expenses) {
-                      context
-                          .read<BudgetBloc>()
-                          .add(AddExpense(data[InsightsFormKeys.amount]));
-                    } else if (currentValue == InsightsOptionsKeys.savings) {
-                      context
-                          .read<BudgetBloc>()
-                          .add(AddSavings(data[InsightsFormKeys.amount]));
+                          .read<InsightsBloc>()
+                          .add(AddInsightEvent(newInsight));
+
+                      final folder =
+                          InsightModel(folder: folderController.text);
+
+                      context.read<FolderBloc>().add(FolderNameEvent(folder));
+                      context.pop();
                     }
-                    final newInsight = InsightModel(
-                      amount:
-                          _formKey.currentState!.value[InsightsFormKeys.amount],
-                      date: DateTime.now().toString(),
-                      description: _formKey
-                          .currentState!.value[InsightsFormKeys.description],
-                    );
-                    context
-                        .read<InsightsBloc>()
-                        .add(AddInsightEvent(newInsight));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 72, 86, 68),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
                     context.pop();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 72, 86, 68),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 87, 38, 38),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Add',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 87, 38, 38),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -273,7 +289,7 @@ class _AddState extends State<Add> {
                 ),
                 border: InputBorder.none,
               ),
-              onTapOutside: (event) {},
+              onTapOutside: (event) => _focus.unfocus(),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -323,11 +339,13 @@ class _AddState extends State<Add> {
                             ),
                             margin: const EdgeInsets.only(left: 10),
                             padding: const EdgeInsets.only(left: 10),
-                            child: const TextField(
-                              style: TextStyle(
+                            child: TextField(
+                              style: const TextStyle(
                                 color: Colors.white,
                               ),
-                              decoration: InputDecoration(
+                              controller: folderController,
+                              onTapOutside: (event) => _focus.unfocus(),
+                              decoration: const InputDecoration(
                                 hintText: 'Search',
                                 hintStyle: TextStyle(
                                   color: Colors.white54,
@@ -337,52 +355,38 @@ class _AddState extends State<Add> {
                             ),
                           );
                   },
-                  body: SizedBox(
-                    height: 120,
-                    child: Scrollbar(
-                      thickness: 10,
-                      interactive: true,
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        children: [
-                          ListTile(
-                            tileColor: Colors.transparent,
-                            title: const Text(
-                              'Food',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white70,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          ListTile(
-                            tileColor: Colors.transparent,
-                            title: const Text(
-                              'Customers',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white70,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          const ListTile(
-                            tileColor: Colors.transparent,
-                            title: Text(
-                              'Customers',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white70,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  body: BlocBuilder<FolderBloc, FolderState>(
+                    builder: (context, state) {
+                      if (state is FolderLoadedState) {
+                        return SizedBox(
+                          height: 120,
+                          child: Scrollbar(
+                            thickness: 10,
+                            interactive: true,
+                            child: ListView.builder(
+                              itemCount: state.folderName.length,
+                              itemBuilder: (context, index) {
+                                final folder = state.folderName[index];
+                                ListTile(
+                                  tileColor: Colors.transparent,
+                                  title: Text(
+                                    folder.folder,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onTap: () {},
+                                );
+                                return Container();
+                              },
                             ),
                           ),
-                        ],
-                      ),
-                    ),
+                        );
+                      }
+                      return Container();
+                    },
                   ),
                 ),
               ],
@@ -413,7 +417,7 @@ class _AddState extends State<Add> {
                 ),
                 border: InputBorder.none,
               ),
-              onTapOutside: (event) {},
+              onTapOutside: (event) => _focus.unfocus(),
             ),
           ),
         ],
