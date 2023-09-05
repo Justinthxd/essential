@@ -86,9 +86,11 @@ class Home extends StatelessWidget {
                         return FolderItem(
                           icon: insight.icon,
                           name: insight.description,
-                          description: insight.date,
+                          date: insight.date,
+                          category: insight.category,
                           money: insight.amount,
                           colorContainer: cakeColor,
+                          description: '',
                         );
                       },
                     ),

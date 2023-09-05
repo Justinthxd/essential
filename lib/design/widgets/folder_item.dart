@@ -1,3 +1,4 @@
+import 'package:essential/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 
 class FolderItem extends StatelessWidget {
@@ -6,6 +7,8 @@ class FolderItem extends StatelessWidget {
     required this.icon,
     required this.name,
     required this.description,
+    required this.date,
+    required this.category,
     required this.money,
     required this.colorContainer,
   });
@@ -13,6 +16,8 @@ class FolderItem extends StatelessWidget {
   final IconData icon;
   final String name;
   final String description;
+  final String date;
+  final CategoryModel category;
   final String money;
   final Color colorContainer;
 
@@ -58,7 +63,7 @@ class FolderItem extends StatelessWidget {
                 ),
               ),
               Text(
-                description,
+                category.title,
                 style: const TextStyle(
                   fontSize: 15,
                   color: Colors.white54,

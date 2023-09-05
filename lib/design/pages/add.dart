@@ -1,8 +1,9 @@
 import 'package:essential/core/utils/constants.dart';
 import 'package:essential/core/utils/keys.dart';
+import 'package:essential/data/models/category_model.dart';
 import 'package:essential/data/models/insight_model.dart';
 import 'package:essential/design/bloc/budget_bloc/budget_bloc.dart';
-import 'package:essential/design/bloc/folder_bloc/folder_bloc.dart';
+import 'package:essential/design/bloc/category_bloc/category_bloc.dart';
 import 'package:essential/design/bloc/insights_bloc/insights_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,21 +22,19 @@ class _AddState extends State<Add> {
 
   String currentValue = InsightsOptionsKeys.incomes;
 
-  final TextEditingController folderController = TextEditingController();
+  final TextEditingController searchFolder = TextEditingController();
 
   bool isActive = false;
 
   final FocusNode _focus = FocusNode();
+
+  String currentCategory = 'Category';
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _formKey.currentState!.fields[InsightsFormKeys.amount]!.focus();
-
-      final folder = InsightModel(folder: folderController.text);
-
-      context.read<FolderBloc>().add(FolderNameEvent(folder));
     });
   }
 
@@ -64,9 +63,13 @@ class _AddState extends State<Add> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context
+                  .read<CategoryBloc>()
+                  .add(AddCategoryEvent(const CategoryModel(title: 'Family')));
+            },
             icon: const Icon(
-              Icons.savings_rounded,
+              Icons.folder_copy_rounded,
               color: Colors.white54,
             ),
           ),
@@ -137,17 +140,15 @@ class _AddState extends State<Add> {
                         amount: _formKey
                             .currentState!.value[InsightsFormKeys.amount],
                         date: DateTime.now().toString(),
-                        description: _formKey
-                            .currentState!.value[InsightsFormKeys.description],
+                        description: _formKey.currentState!
+                                .value[InsightsFormKeys.description] ??
+                            '',
+                        category: CategoryModel(title: currentCategory),
                       );
                       context
                           .read<InsightsBloc>()
                           .add(AddInsightEvent(newInsight));
 
-                      final folder =
-                          InsightModel(folder: folderController.text);
-
-                      context.read<FolderBloc>().add(FolderNameEvent(folder));
                       context.pop();
                     }
                   },
@@ -324,11 +325,13 @@ class _AddState extends State<Add> {
                               setState(() {});
                             },
                             tileColor: Colors.transparent,
-                            title: const Text(
-                              'Add to folder',
+                            title: Text(
+                              currentCategory,
                               style: TextStyle(
                                 fontSize: 18,
-                                color: Colors.white60,
+                                color: currentCategory != 'Default'
+                                    ? Colors.white
+                                    : Colors.white60,
                               ),
                             ),
                           )
@@ -343,7 +346,7 @@ class _AddState extends State<Add> {
                               style: const TextStyle(
                                 color: Colors.white,
                               ),
-                              controller: folderController,
+                              controller: searchFolder,
                               onTapOutside: (event) => _focus.unfocus(),
                               decoration: const InputDecoration(
                                 hintText: 'Search',
@@ -355,31 +358,34 @@ class _AddState extends State<Add> {
                             ),
                           );
                   },
-                  body: BlocBuilder<FolderBloc, FolderState>(
+                  body: BlocBuilder<CategoryBloc, CategoryState>(
                     builder: (context, state) {
-                      if (state is FolderLoadedState) {
+                      if (state is CategoryLoadedState) {
                         return SizedBox(
                           height: 120,
                           child: Scrollbar(
                             thickness: 10,
                             interactive: true,
                             child: ListView.builder(
-                              itemCount: state.folderName.length,
+                              itemCount: state.categories.length,
                               itemBuilder: (context, index) {
-                                final folder = state.folderName[index];
-                                ListTile(
+                                final category = state.categories[index];
+                                return ListTile(
                                   tileColor: Colors.transparent,
                                   title: Text(
-                                    folder.folder,
+                                    category.title,
                                     style: const TextStyle(
                                       fontSize: 18,
                                       color: Colors.white70,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  onTap: () {},
+                                  onTap: () {
+                                    currentCategory = category.title;
+                                    isActive = !isActive;
+                                    setState(() {});
+                                  },
                                 );
-                                return Container();
                               },
                             ),
                           ),

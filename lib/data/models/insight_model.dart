@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:essential/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 
 class InsightModel {
@@ -6,14 +7,14 @@ class InsightModel {
   final String description;
   final String date;
   final IconData icon;
-  final String folder;
+  final CategoryModel category;
 
   InsightModel({
     this.amount = '0',
     this.description = '',
     this.date = '',
     this.icon = Icons.add_circle_outline_sharp,
-    this.folder = '',
+    this.category = const CategoryModel(),
   });
 
   InsightModel copyWith(
@@ -21,13 +22,13 @@ class InsightModel {
       String? description,
       String? date,
       IconData? icon,
-      String? folder}) {
+      CategoryModel? category}) {
     return InsightModel(
       amount: amount ?? this.amount,
       description: description ?? this.description,
       date: date ?? this.date,
       icon: icon ?? this.icon,
-      folder: folder ?? this.folder,
+      category: category ?? this.category,
     );
   }
 
@@ -37,7 +38,7 @@ class InsightModel {
       'description': description,
       'date': date,
       'icon': icon.codePoint,
-      'folder': folder,
+      'category': category,
     };
   }
 
@@ -47,12 +48,12 @@ class InsightModel {
       description: json['description'],
       date: json['date'],
       icon: IconData(json['icon'], fontFamily: 'MaterialIcons'),
-      folder: json['folder'],
+      category: json['category'],
     );
   }
 
   @override
   String toString() {
-    return 'InsightModel(amount: $amount, description: $description, date: $date, icon: ${String.fromCharCode(icon.codePoint)} folder: $folder)';
+    return 'InsightModel(amount: $amount, description: $description, date: $date, icon: ${String.fromCharCode(icon.codePoint)} category: $category)';
   }
 }

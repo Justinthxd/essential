@@ -10,28 +10,42 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       if (event is AddIncome) {
         final currentData = state as BudgetDataState;
 
+        double income = double.parse(event.income);
+
         emit(BudgetDataState(
           expense: currentData.expense,
-          income: currentData.income + double.parse(event.income),
+          income: currentData.income + _toPositive(income),
           savings: currentData.savings,
         ));
       } else if (event is AddExpense) {
         final currentData = state as BudgetDataState;
 
+        double expense = double.parse(event.expense);
+
         emit(BudgetDataState(
-          expense: currentData.expense + double.parse(event.expense),
+          expense: currentData.expense + _toPositive(expense),
           income: currentData.income,
           savings: currentData.savings,
         ));
       } else if (event is AddSavings) {
         final currentData = state as BudgetDataState;
 
+        double savings = double.parse(event.savings);
+
         emit(BudgetDataState(
           expense: currentData.expense,
           income: currentData.income,
-          savings: currentData.savings + double.parse(event.savings),
+          savings: currentData.savings + _toPositive(savings),
         ));
       }
     });
+  }
+
+  _toPositive(double value) {
+    if (value < 0) {
+      return value * -1;
+    }
+
+    return value;
   }
 }
